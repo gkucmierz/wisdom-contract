@@ -4,14 +4,14 @@ pragma solidity ^0.7.2;
 
 contract WisdomToken {
 
-  string name = 'Wisdom Token';
-  string symbol = 'WIS';
-  uint8 decimals = 18;
+  string public name = 'Wisdom Token';
+  string public symbol = 'WIS';
+  uint8 public decimals = 18;
 
   uint256 public totalSupply;
 
   mapping (address => uint256) public balanceOf;
-  mapping (address => mapping (address => uint256)) allowed;
+  mapping (address => mapping (address => uint256)) public allowed;
 
   function _transfer(address sender, address recipient, uint256 amount) private returns (bool) {
     require(balanceOf[sender] >= amount);
