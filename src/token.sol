@@ -8,7 +8,7 @@ contract WisdomToken {
   string public symbol = 'WIS';
   uint8 public decimals = 18;
 
-  uint256 public totalSupply = 80_000_000;
+  uint256 public totalSupply = 80_000_000 ether;
 
   mapping (address => uint256) public balanceOf;
   mapping (address => mapping (address => uint256)) public allowed;
