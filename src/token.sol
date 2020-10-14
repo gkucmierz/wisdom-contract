@@ -14,6 +14,7 @@ contract WisdomToken {
   mapping (address => mapping (address => uint256)) public allowed;
 
   address owner;
+  bool paused = false;
 
   constructor() {
     balanceOf[msg.sender] = totalSupply;
@@ -21,6 +22,7 @@ contract WisdomToken {
   }
 
   function _transfer(address sender, address recipient, uint256 amount) private returns (bool) {
+    require(!paused);
     require(balanceOf[sender] >= amount);
     balanceOf[sender] -= amount;
     balanceOf[recipient] += amount;
@@ -50,6 +52,10 @@ contract WisdomToken {
   function transferOwnership(address newOwner) public {
     require(msg.sender == owner);
     owner = newOwner;
+  }
+
+  function setPaused(bool _paused) public {
+    paused = _paused;
   }
 
   event Transfer(address indexed from, address indexed to, uint256 value);
