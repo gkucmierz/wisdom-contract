@@ -13,8 +13,11 @@ contract WisdomToken {
   mapping (address => uint256) public balanceOf;
   mapping (address => mapping (address => uint256)) public allowed;
 
+  address owner;
+
   constructor() {
     balanceOf[msg.sender] = totalSupply;
+    owner = msg.sender;
   }
 
   function _transfer(address sender, address recipient, uint256 amount) private returns (bool) {
@@ -24,24 +27,29 @@ contract WisdomToken {
     emit Transfer(sender, recipient, amount);
   }
 
-  function transfer(address recipient, uint256 amount) external returns (bool) {
+  function transfer(address recipient, uint256 amount) public returns (bool) {
     _transfer(msg.sender, recipient, amount);
   }
 
-  function allowance(address owner, address spender) external view returns (uint256) {
-    return allowed[owner][spender];
+  function allowance(address holder, address spender) public view returns (uint256) {
+    return allowed[holder][spender];
   }
 
-  function approve(address spender, uint256 amount) external returns (bool) {
+  function approve(address spender, uint256 amount) public returns (bool) {
     require(balanceOf[msg.sender] >= amount);
     allowed[msg.sender][spender] = amount;
     emit Approval(msg.sender, spender, amount);
   }
 
-  function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
+  function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
     require(allowed[sender][msg.sender] >= amount);
     _transfer(sender, recipient, amount);
     allowed[sender][msg.sender] -= amount;
+  }
+
+  function transferOwnership(address newOwner) public {
+    require(msg.sender == owner);
+    owner = newOwner;
   }
 
   event Transfer(address indexed from, address indexed to, uint256 value);
