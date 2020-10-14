@@ -8,10 +8,14 @@ contract WisdomToken {
   string public symbol = 'WIS';
   uint8 public decimals = 18;
 
-  uint256 public totalSupply;
+  uint256 public totalSupply = 80_000_000;
 
   mapping (address => uint256) public balanceOf;
   mapping (address => mapping (address => uint256)) public allowed;
+
+  constructor() {
+    balanceOf[msg.sender] = totalSupply;
+  }
 
   function _transfer(address sender, address recipient, uint256 amount) private returns (bool) {
     require(balanceOf[sender] >= amount);
