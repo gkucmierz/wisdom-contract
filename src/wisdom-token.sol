@@ -12,14 +12,7 @@ contract ERC20 {
   mapping (address => uint256) public balanceOf;
   mapping (address => mapping (address => uint256)) public allowed;
 
-  bool paused = false;
-
-  constructor() {
-    balanceOf[msg.sender] = totalSupply;
-  }
-
-  function _transfer(address sender, address recipient, uint256 amount) private returns (bool) {
-    require(!paused);
+  function _transfer(address sender, address recipient, uint256 amount) internal virtual returns (bool) {
     require(balanceOf[sender] >= amount);
     balanceOf[sender] -= amount;
     balanceOf[recipient] += amount;
@@ -67,7 +60,7 @@ contract Ownable {
     emit TransferOwnership(newOwner);
   }
 
-  event TransferOwnership(address);
+  event TransferOwnership(address newOwner);
 }
 
 contract Pausable is Ownable {
@@ -98,14 +91,38 @@ contract Pausable is Ownable {
   event Unpause();
 }
 
-contract WisdomToken is Pausable {
+contract Issuable is ERC20, Ownable {
 
-  string public name = 'Wisdom Token';
-  string public symbol = 'WIS';
-  uint8 public decimals = 18;
-  uint256 public totalSupply = 0;
+  bool public locked = false;
+
+  modifier whenUnlocked() {
+    require(!locked);
+    _;
+  }
+
+  function issue(address addr, uint256 amount) public onlyOwner whenUnlocked {
+    _transfer(address(0x0), addr, amount);
+  }
+
+  function lock() public onlyOwner {
+    locked = true;
+  }
+}
+
+contract WisdomToken is ERC20, Pausable, Issuable {
 
   constructor() {
+    name = 'Wisdom Token';
+    symbol = 'WIS';
+    decimals = 18;
+    totalSupply = 0;
+  }
+
+  function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
+    require(balanceOf[sender] >= amount);
+    balanceOf[sender] -= amount;
+    balanceOf[recipient] += amount;
+    emit Transfer(sender, recipient, amount);
   }
 
 }
