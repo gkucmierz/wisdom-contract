@@ -100,11 +100,19 @@ contract Issuable is ERC20, Ownable {
     _;
   }
 
-  function issue(address addr, uint256 amount) public onlyOwner whenUnlocked {
-    _transfer(address(0x0), addr, amount);
+  function issue(address[] memory addr, uint256[] memory amount) public onlyOwner whenUnlocked {
+    require(addr.length == amount.length);
+    uint8 i;
+    uint256 sum = 0;
+    for (i = 0; i < addr.length; ++i) {
+      balanceOf[addr[i]] = amount[i];
+      emit Transfer(address(0x0), addr[i], amount[i]);
+      sum += amount[i];
+    }
+    totalSupply += sum;
   }
 
-  function lock() public onlyOwner {
+  function lock() public onlyOwner whenUnlocked {
     locked = true;
   }
 }
