@@ -2,23 +2,20 @@
 
 pragma solidity ^0.7.2;
 
-contract WisdomToken {
+contract ERC20 {
 
-  string public name = 'Wisdom Token';
-  string public symbol = 'WIS';
-  uint8 public decimals = 18;
-
-  uint256 public totalSupply = 80_000_000 ether;
+  string public name;
+  string public symbol;
+  uint8 public decimals;
+  uint256 public totalSupply;
 
   mapping (address => uint256) public balanceOf;
   mapping (address => mapping (address => uint256)) public allowed;
 
-  address owner;
   bool paused = false;
 
   constructor() {
     balanceOf[msg.sender] = totalSupply;
-    owner = msg.sender;
   }
 
   function _transfer(address sender, address recipient, uint256 amount) private returns (bool) {
@@ -49,15 +46,66 @@ contract WisdomToken {
     allowed[sender][msg.sender] -= amount;
   }
 
-  function transferOwnership(address newOwner) public {
-    require(msg.sender == owner);
-    owner = newOwner;
-  }
-
-  function setPaused(bool _paused) public {
-    paused = _paused;
-  }
-
   event Transfer(address indexed from, address indexed to, uint256 value);
-  event Approval(address indexed owner, address indexed spender, uint256 value);
+  event Approval(address indexed holder, address indexed spender, uint256 value);
+}
+
+contract Ownable {
+  address public owner;
+
+  constructor() {
+    owner = msg.sender;
+  }
+
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  function transferOwnership(address newOwner) public onlyOwner {
+    owner = newOwner;
+    emit TransferOwnership(newOwner);
+  }
+
+  event TransferOwnership(address);
+}
+
+contract Pausable is Ownable {
+
+  bool public paused = true;
+
+  modifier whenNotPaused() {
+    require(!paused);
+    _;
+  }
+
+  modifier whenPaused() {
+    require(paused);
+    _;
+  }
+
+  function pause() onlyOwner whenNotPaused public {
+    paused = true;
+    emit Pause();
+  }
+
+  function unpause() onlyOwner whenPaused public {
+    paused = false;
+    emit Unpause();
+  }
+
+  event Pause();
+  event Unpause();
+}
+
+contract WisdomToken is Pausable {
+
+  string public name = 'Wisdom Token';
+  string public symbol = 'WIS';
+  uint8 public decimals = 18;
+  uint256 public totalSupply = 0;
+
+  constructor() {
+  }
+
 }
