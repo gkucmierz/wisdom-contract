@@ -127,10 +127,7 @@ contract WisdomToken is ERC20, Pausable, Issuable {
   }
 
   function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
-    require(balanceOf[sender] >= amount);
-    balanceOf[sender] -= amount;
-    balanceOf[recipient] += amount;
-    emit Transfer(sender, recipient, amount);
+    super._transfer(sender, recipient, amount);
   }
 
 }
