@@ -7,14 +7,19 @@ npm i
 touch .env
 ```
 
-`.env` file
+Fill `.env` file
 
 ```
-PRIVKEY=7d6d…
-CONTRACT_ADDR=0xa3efba0cf94eb8998c23d37547d6e5b5062508e1
+PRIVKEY = …
+CONTRACT_ADDR = …
 
-INFURA_PROVIDER=wss://mainnet.infura.io/v3/a9…
-INFURA_KOVAN_PROVIDER=wss://kovan.infura.io/ws/v3/a9…
+INFURA_APIKEY = …
+
+NETWORK_NAME = kovan
+
+BATCH_SIZE = 200
+GAS_PRICE = 1e9
+GAS_LIMIT = 1e7
 ```
 
 ### cost comparision
