@@ -43,6 +43,35 @@ contract ERC20 {
   event Approval(address indexed holder, address indexed spender, uint256 value);
 }
 
+interface IERC677Receiver {
+  function onTokenTransfer(address from, uint256 amount, bytes calldata data) external;
+}
+
+contract ERC667 is ERC20 {
+  function transferAndCall(address recipient, uint amount, bytes calldata data) public returns (bool) {
+    bool success = super._transfer(msg.sender, recipient, amount);
+    if (success){
+      IERC677Receiver(recipient).onTokenTransfer(msg.sender, amount, data);
+    }
+    return success;
+  }
+}
+
+contract ERCTransferFrom is ERC667 {
+  function transferFrom(address recipient, uint256 amount, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+    bytes32 hash = keccak256(abi.encodePacked('transferFrom', recipient, amount));
+    address from = ecrecover(hash, _v, _r, _s);
+    return super._transfer(from, recipient, amount);
+  }
+
+  function transferFromUntil(address recipient, uint256 untilBlock, uint256 amount, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+    require (untilBlock <= block.number);
+    bytes32 hash = keccak256(abi.encodePacked('transferFrom', recipient, amount, untilBlock));
+    address from = ecrecover(hash, _v, _r, _s);
+    return super._transfer(from, recipient, amount);
+  }
+}
+
 contract Ownable {
   address public owner;
 
@@ -64,7 +93,6 @@ contract Ownable {
 }
 
 contract Pausable is Ownable {
-
   bool public paused = true;
 
   modifier whenNotPaused() {
@@ -92,7 +120,6 @@ contract Pausable is Ownable {
 }
 
 contract Issuable is ERC20, Ownable {
-
   bool public locked = false;
 
   modifier whenUnlocked() {
@@ -117,8 +144,7 @@ contract Issuable is ERC20, Ownable {
   }
 }
 
-contract WisdomToken is ERC20, Pausable, Issuable {
-
+contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
   constructor() {
     name = 'Wisdom Token';
     symbol = 'WIS';
@@ -129,5 +155,4 @@ contract WisdomToken is ERC20, Pausable, Issuable {
   function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
     super._transfer(sender, recipient, amount);
   }
-
 }
