@@ -20,6 +20,8 @@ NETWORK_NAME = kovan
 BATCH_SIZE = 200
 GAS_PRICE = 1e9
 GAS_LIMIT = 1e7
+
+STARTING_NONCE =
 ```
 
 ### cost comparision
