@@ -17,10 +17,11 @@ contract ERC20 {
     balanceOf[sender] -= amount;
     balanceOf[recipient] += amount;
     emit Transfer(sender, recipient, amount);
+    return true;
   }
 
   function transfer(address recipient, uint256 amount) public returns (bool) {
-    _transfer(msg.sender, recipient, amount);
+    return _transfer(msg.sender, recipient, amount);
   }
 
   function allowance(address holder, address spender) public view returns (uint256) {
@@ -31,12 +32,14 @@ contract ERC20 {
     require(balanceOf[msg.sender] >= amount);
     allowed[msg.sender][spender] = amount;
     emit Approval(msg.sender, spender, amount);
+    return true;
   }
 
   function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
     require(allowed[sender][msg.sender] >= amount);
     _transfer(sender, recipient, amount);
     allowed[sender][msg.sender] -= amount;
+    return true;
   }
 
   event Transfer(address indexed from, address indexed to, uint256 value);
@@ -58,16 +61,27 @@ contract ERC667 is ERC20 {
 }
 
 contract ERCTransferFrom is ERC667 {
-  mapping (bytes32 => bool) transferred;
+  mapping (address => mapping (address => uint256)) public nonceOf;
 
-  function transferFromUntil(address recipient, uint256 untilBlock, uint256 amount, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
-    require (untilBlock <= block.number);
-    bytes32 hash = keccak256(abi.encodePacked('transferFromUntil', recipient, amount, untilBlock));
-    require(!transferred[hash]);
-    address from = ecrecover(hash, _v, _r, _s);
+  function _transfer(address from, address recipient, uint256 amount, uint256 nonce) private returns (bool) {
+    uint256 nextNonce = nonceOf[from][recipient] + 1;
+    require(nonce == nextNonce);
     bool success = super._transfer(from, recipient, amount);
-    transferred[hash] = success;
+    nonceOf[from][recipient] = nextNonce;
     return success;
+  }
+
+  function transferFrom(address recipient, uint256 amount, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+    bytes32 hash = keccak256(abi.encodePacked('transferFrom', recipient, amount, nonce));
+    address from = ecrecover(hash, _v, _r, _s);
+    return _transfer(from, recipient, amount, nonce);
+  }
+
+  function transferFromUntil(address recipient, uint256 amount, uint256 untilBlock, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+    require(untilBlock <= block.number);
+    bytes32 hash = keccak256(abi.encodePacked('transferFromUntil', recipient, amount, nonce, untilBlock));
+    address from = ecrecover(hash, _v, _r, _s);
+    return _transfer(from, recipient, amount, nonce);
   }
 }
 
@@ -152,6 +166,6 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
   }
 
   function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
-    super._transfer(sender, recipient, amount);
+    return super._transfer(sender, recipient, amount);
   }
 }
