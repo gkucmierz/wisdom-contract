@@ -86,7 +86,7 @@ contract ERCTransferFrom is ERC667 {
 }
 
 contract Ownable {
-  address public owner;
+  address owner;
 
   constructor() {
     owner = msg.sender;
@@ -133,7 +133,7 @@ contract Pausable is Ownable {
 }
 
 contract Issuable is ERC20, Ownable {
-  bool public locked = false;
+  bool locked = false;
 
   modifier whenUnlocked() {
     require(!locked);
@@ -152,7 +152,7 @@ contract Issuable is ERC20, Ownable {
     totalSupply += sum;
   }
 
-  function lock() public onlyOwner whenUnlocked {
+  function lock() internal onlyOwner whenUnlocked {
     locked = true;
   }
 }
@@ -167,5 +167,11 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
 
   function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
     return super._transfer(sender, recipient, amount);
+  }
+
+  function alive(address owner) public {
+    lock();
+    unpause();
+    transferOwnership(owner);
   }
 }
