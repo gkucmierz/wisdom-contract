@@ -2,6 +2,7 @@
 
 pragma solidity ^0.7.2;
 
+
 contract ERC20 {
 
   string public name;
@@ -63,6 +64,14 @@ contract ERC667 is ERC20 {
 contract ERCTransferFrom is ERC667 {
   mapping (address => mapping (address => uint256)) public nonceOf;
 
+  /** @dev Internal transfer function that checks if nonce is correct and
+    * update it if transfer was successfull
+    * @param from address from where tokens are sended
+    * @param recipient address which recives tokens
+    * @param amount is transferred amount
+    * @param nonce that should be next natural number
+    * @return boolean if transaction was successfull
+    */
   function _transfer(address from, address recipient, uint256 amount, uint256 nonce) private returns (bool) {
     uint256 nextNonce = nonceOf[from][recipient] + 1;
     require(nonce == nextNonce);
@@ -71,12 +80,35 @@ contract ERCTransferFrom is ERC667 {
     return success;
   }
 
+  /** @dev allows to make transaction from another address with signature
+    * provided in params
+    * @param address is address where tokens will be sended
+    * @param amount is transferred amount
+    * @param nonce that should be next natural number
+    * @param _v - signature from tokens holder account
+    * @param _r - signature from tokens holder account
+    * @param _S - signature from tokens holder account
+    * @return s The calculated surface.
+    * @return p The calculated perimeter.
+    */
   function transferFrom(address recipient, uint256 amount, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
     bytes32 hash = keccak256(abi.encodePacked('transferFrom', recipient, amount, nonce));
     address from = ecrecover(hash, _v, _r, _s);
     return _transfer(from, recipient, amount, nonce);
   }
 
+  /** @dev allows to make transaction from another address with signature
+    * provided in params. Transaction which is valid until specified block
+    * @param address is address where tokens will be sended
+    * @param amount is transferred amount
+    * @param untilBlock maximum block number where transaction is still valid
+    * @param nonce that should be next natural number
+    * @param _v - signature from tokens holder account
+    * @param _r - signature from tokens holder account
+    * @param _S - signature from tokens holder account
+    * @return s The calculated surface.
+    * @return p The calculated perimeter.
+    */
   function transferFromUntil(address recipient, uint256 amount, uint256 untilBlock, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
     require(untilBlock <= block.number);
     bytes32 hash = keccak256(abi.encodePacked('transferFromUntil', recipient, amount, nonce, untilBlock));
