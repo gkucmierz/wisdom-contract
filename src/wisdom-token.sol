@@ -52,7 +52,7 @@ interface IERC677Receiver {
 
 contract ERC667 is ERC20 {
   function transferAndCall(address recipient, uint amount, bytes calldata data) public returns (bool) {
-    bool success = super._transfer(msg.sender, recipient, amount);
+    bool success = _transfer(msg.sender, recipient, amount);
     if (success){
       IERC677Receiver(recipient).onTokenTransfer(msg.sender, amount, data);
     }
@@ -67,7 +67,7 @@ contract ERCTransferFrom is ERC667 {
   function _transfer(address from, address recipient, uint256 amount, uint256 nonce) private returns (bool) {
     uint256 nextNonce = nonceOf[from][recipient] + 1;
     require(nonce == nextNonce);
-    bool success = super._transfer(from, recipient, amount);
+    bool success = _transfer(from, recipient, amount);
     if (success) nonceOf[from][recipient] = nextNonce;
     return success;
   }
@@ -167,7 +167,7 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
   }
 
   function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
-    return super._transfer(sender, recipient, amount);
+    return _transfer(sender, recipient, amount);
   }
 
   function alive(address owner) public {
