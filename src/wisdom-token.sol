@@ -79,7 +79,7 @@ contract ERCTransferFrom is ERC667 {
   }
 
   function transferFromUntil(address recipient, uint256 amount, uint256 untilBlock, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
-    require(untilBlock <= block.number);
+    require(block.number <= untilBlock);
     bytes32 hash = keccak256(abi.encodePacked('transferFromUntil', recipient, amount, nonce, untilBlock));
     address from = ecrecover(hash, _v, _r, _s);
     return _transfer(from, recipient, amount, nonce);
