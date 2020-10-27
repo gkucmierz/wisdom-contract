@@ -87,6 +87,7 @@ contract ERCTransferFrom is ERC667 {
 
 contract Ownable {
   address owner;
+  address newOwner;
 
   constructor() {
     owner = msg.sender;
@@ -97,10 +98,15 @@ contract Ownable {
     _;
   }
 
-  function transferOwnership(address newOwner) public onlyOwner {
-    require(newOwner != address(0x0));
-    owner = newOwner;
-    emit TransferOwnership(newOwner);
+  function changeOwner(address _newOwner) public onlyOwner {
+    newOwner = _newOwner;
+  }
+
+  function acceptOwner(address _newOwner) public onlyOwner {
+    require(_newOwner != address(0x0));
+    require(_newOwner == newOwner);
+    owner = _newOwner;
+    emit TransferOwnership(_newOwner);
   }
 
   event TransferOwnership(address newOwner);
@@ -173,6 +179,7 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
   function alive(address owner) public {
     lock();
     unpause();
-    transferOwnership(owner);
+    changeOwner(owner);
+    acceptOwner(owner);
   }
 }
