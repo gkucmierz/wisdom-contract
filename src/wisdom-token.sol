@@ -160,7 +160,7 @@ contract Issuable is ERC20, Ownable {
 
 contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
   constructor() {
-    name = 'Wisdom Token';
+    name = 'Experty Wisdom Token';
     symbol = 'WIS';
     decimals = 18;
     totalSupply = 0;
