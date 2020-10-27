@@ -63,7 +63,6 @@ contract ERC667 is ERC20 {
 contract ERCTransferFrom is ERC667 {
   mapping (address => mapping (address => uint256)) public nonceOf;
 
-
   function _transfer(address from, address recipient, uint256 amount, uint256 nonce) private returns (bool) {
     uint256 nextNonce = nonceOf[from][recipient] + 1;
     require(nonce == nextNonce);
@@ -168,7 +167,7 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
   }
 
   function _transfer(address sender, address recipient, uint256 amount) internal whenNotPaused override returns (bool) {
-    return _transfer(sender, recipient, amount);
+    return super._transfer(sender, recipient, amount);
   }
 
   function alive(address owner) public {
