@@ -102,11 +102,10 @@ contract Ownable {
     newOwner = _newOwner;
   }
 
-  function acceptOwner(address _newOwner) public onlyOwner {
-    require(_newOwner != address(0x0));
-    require(_newOwner == newOwner);
-    owner = _newOwner;
-    emit TransferOwnership(_newOwner);
+  function acceptOwner() public {
+    require(newOwner == msg.sender);
+    owner = msg.sender;
+    emit TransferOwnership(msg.sender);
   }
 
   event TransferOwnership(address newOwner);
@@ -176,10 +175,9 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
     return super._transfer(sender, recipient, amount);
   }
 
-  function alive(address owner) public {
+  function alive(address newOwner) public {
     lock();
     unpause();
-    changeOwner(owner);
-    acceptOwner(owner);
+    changeOwner(newOwner);
   }
 }
