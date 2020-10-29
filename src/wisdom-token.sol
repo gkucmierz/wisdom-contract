@@ -61,9 +61,65 @@ contract ERC667 is ERC20 {
 }
 
 contract ERCTransferFrom is ERC667 {
+
+  struct TransferFrom {
+    address to;
+    uint256 amount;
+    uint256 nonce;
+  }
+
+  struct TransferFromUntil {
+    address to;
+    uint256 amount;
+    uint256 nonce;
+    uint256 untilBlock;
+  }
+
   mapping (address => mapping (address => uint256)) public nonceOf;
 
+  string private constant TRANSFER_FROM_TYPEHASH = "TransferFrom(address to,uint256 amount,uint256 nonce)";
+  string private constant TRANSFER_FROM_UNTIL_TYPEHASH = "TransferFromUntil(address to,uint256 amount,uint256 nonce,uint256 untilBlock)";
+  uint256 private chainId = getChainID();
+  address private verifyingContract = address(this);
+  string private constant EIP712_DOMAIN_TYPEHASH = "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
+
+  bytes32 private DOMAIN_SEPARATOR = keccak256(abi.encode(
+    EIP712_DOMAIN_TYPEHASH,
+    keccak256("Experty Wisdom Token"),
+    keccak256("1.4"),
+    chainId,
+    verifyingContract
+  ));
+
+  function getChainID() private pure returns (uint256) {
+    uint256 id;
+    assembly {
+      id := chainid()
+    }
+    return id;
+  }
+
+  function hashTransferFrom(TransferFrom memory _transferFrom) private pure returns (bytes32) {
+    return keccak256(abi.encode(
+      TRANSFER_FROM_TYPEHASH,
+      _transferFrom.to,
+      _transferFrom.amount,
+      _transferFrom.nonce
+    ));
+  }
+
+  function hashTransferFromUntil(TransferFromUntil memory _transferFromUntil) private pure returns (bytes32) {
+    return keccak256(abi.encode(
+      TRANSFER_FROM_UNTIL_TYPEHASH,
+      _transferFromUntil.to,
+      _transferFromUntil.amount,
+      _transferFromUntil.nonce,
+      _transferFromUntil.untilBlock
+    ));
+  }
+
   function _transfer(address from, address recipient, uint256 amount, uint256 nonce) private returns (bool) {
+    require(from != address(0x0));
     uint256 nextNonce = nonceOf[from][recipient] + 1;
     require(nonce == nextNonce);
     bool success = _transfer(from, recipient, amount);
@@ -71,17 +127,25 @@ contract ERCTransferFrom is ERC667 {
     return success;
   }
 
-  function transferFrom(address recipient, uint256 amount, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
-    bytes32 hash = keccak256(abi.encodePacked('transferFrom', recipient, amount, nonce));
+  function transferFrom(address _recipient, uint256 _amount, uint256 _nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+    bytes32 hash = hashTransferFrom(TransferFrom({
+      to: _recipient,
+      amount: _amount,
+      nonce: _nonce
+    }));
     address from = ecrecover(hash, _v, _r, _s);
-    return _transfer(from, recipient, amount, nonce);
+    return _transfer(from, _recipient, _amount, _nonce);
   }
 
-  function transferFromUntil(address recipient, uint256 amount, uint256 untilBlock, uint256 nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
-    require(block.number <= untilBlock);
-    bytes32 hash = keccak256(abi.encodePacked('transferFromUntil', recipient, amount, nonce, untilBlock));
+  function transferFromUntil(address _recipient, uint256 _amount, uint256 _nonce, uint256 _untilBlock, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+    bytes32 hash = hashTransferFromUntil(TransferFromUntil({
+      to: _recipient,
+      amount: _amount,
+      nonce: _nonce,
+      untilBlock: _untilBlock
+    }));
     address from = ecrecover(hash, _v, _r, _s);
-    return _transfer(from, recipient, amount, nonce);
+    return _transfer(from, _recipient, _amount, _nonce);
   }
 }
 
