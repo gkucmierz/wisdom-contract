@@ -175,9 +175,9 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
     return super._transfer(sender, recipient, amount);
   }
 
-  function alive(address newOwner) public {
+  function alive(address _newOwner) public {
     lock();
     unpause();
-    changeOwner(newOwner);
+    changeOwner(_newOwner);
   }
 }
