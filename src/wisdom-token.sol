@@ -99,8 +99,10 @@ contract ERCTransferFrom is ERC667 {
     return id;
   }
 
-  function hashTransferFrom(TransferFrom memory _transferFrom) private pure returns (bytes32) {
-    return keccak256(abi.encode(
+  function hashTransferFrom(TransferFrom memory _transferFrom) private view returns (bytes32) {
+    return keccak256(abi.encodePacked(
+      "\\x19\\x01",
+      DOMAIN_SEPARATOR,
       TRANSFER_FROM_TYPEHASH,
       _transferFrom.to,
       _transferFrom.amount,
@@ -108,8 +110,10 @@ contract ERCTransferFrom is ERC667 {
     ));
   }
 
-  function hashTransferFromUntil(TransferFromUntil memory _transferFromUntil) private pure returns (bytes32) {
-    return keccak256(abi.encode(
+  function hashTransferFromUntil(TransferFromUntil memory _transferFromUntil) private view returns (bytes32) {
+    return keccak256(abi.encodePacked(
+      "\\x19\\x01",
+      DOMAIN_SEPARATOR,
       TRANSFER_FROM_UNTIL_TYPEHASH,
       _transferFromUntil.to,
       _transferFromUntil.amount,
