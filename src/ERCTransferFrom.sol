@@ -33,7 +33,7 @@ contract ERCTransferFrom is ERC667 {
     bytes32 private DOMAIN_SEPARATOR = keccak256(abi.encode(
         EIP712_DOMAIN_TYPEHASH,
         keccak256("Experty Wisdom Token"),
-        keccak256("1.5.0"),
+        keccak256("1.5.1"),
         chainId,
         verifyingContract,
         salt
