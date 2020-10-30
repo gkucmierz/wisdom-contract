@@ -1,6 +1,6 @@
 {
   "name": "wisdom-contract",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Wisdom Token contract and deploy scripts",
   "main": "index.js",
   "scripts": {
