@@ -83,8 +83,9 @@ contract ERCTransferFrom is ERC667 {
   address private verifyingContract;
   string private EIP712_DOMAIN_TYPEHASH;
   bytes32 private DOMAIN_SEPARATOR;
+  string private PREFIX;
 
-  function initTransferFrom() public {
+  function initTransferFrom() internal {
     TRANSFER_FROM_TYPEHASH = "TransferFrom(address to,uint256 amount,uint256 nonce)";
     TRANSFER_FROM_UNTIL_TYPEHASH = "TransferFromUntil(address to,uint256 amount,uint256 nonce,uint256 untilBlock)";
     chainId = getChainID();
@@ -97,6 +98,7 @@ contract ERCTransferFrom is ERC667 {
       chainId,
       verifyingContract
     ));
+    PREFIX = "\\x19\\x01";
   }
 
   function getChainID() private pure returns (uint256) {
@@ -109,7 +111,7 @@ contract ERCTransferFrom is ERC667 {
 
   function hashTransferFrom(TransferFrom memory _transferFrom) private view returns (bytes32) {
     return keccak256(abi.encodePacked(
-      "\\x19\\x01",
+      PREFIX,
       DOMAIN_SEPARATOR,
       TRANSFER_FROM_TYPEHASH,
       _transferFrom.to,
@@ -120,7 +122,7 @@ contract ERCTransferFrom is ERC667 {
 
   function hashTransferFromUntil(TransferFromUntil memory _transferFromUntil) private view returns (bytes32) {
     return keccak256(abi.encodePacked(
-      "\\x19\\x01",
+      PREFIX,
       DOMAIN_SEPARATOR,
       TRANSFER_FROM_UNTIL_TYPEHASH,
       _transferFromUntil.to,
