@@ -2,11 +2,12 @@
 
 pragma solidity ^0.7.2;
 
+import "./ERC667.sol";
 import "./ERCTransferFrom.sol";
 import "./Pausable.sol";
 import "./Issuable.sol";
 
-contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
+contract WisdomToken is ERC667, ERCTransferFrom, Pausable, Issuable {
     constructor() {
         name = 'Experty Wisdom Token';
         symbol = 'WIS';

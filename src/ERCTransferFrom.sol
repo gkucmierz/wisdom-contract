@@ -2,9 +2,7 @@
 
 pragma solidity ^0.7.2;
 
-import "./ERC667.sol";
-
-contract ERCTransferFrom is ERC667 {
+contract ERCTransferFrom {
 
     struct TransferFrom {
         address to;
@@ -94,6 +92,7 @@ contract ERCTransferFrom is ERC667 {
     function transferFromUntil(
         address _recipient, uint256 _amount, uint256 _nonce, uint256 _untilBlock,
         uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+        require(block.number <= _untilBlock);
         bytes32 hash = hashTransferFromUntil(TransferFromUntil({
             to: _recipient,
             amount: _amount,
