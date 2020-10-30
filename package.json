@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "solhint src/**",
     "docs": "node scripts/generate_docs.js",
-    "build": "poa-solidity-flattener src/WisdomToken.sol",
+    "build": "poa-solidity-flattener src/WisdomToken.sol > /dev/null",
     "watch": "nodemon --exec \"npm run build & npm run docs\" -e sol --ignore ./build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
