@@ -83,14 +83,16 @@ contract ERCTransferFrom is ERC667 {
     uint256 private chainId = getChainID();
     address private verifyingContract = address(this);
     string private PREFIX = "\\x19\\x01";
+    bytes32 constant salt = 0xeb338c7e2d28aad50a8209fc9f5f2eea691acfccf5e9a04fea0d5b95ba3c4c87;
     string private EIP712_DOMAIN_TYPEHASH =
         "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
     bytes32 private DOMAIN_SEPARATOR = keccak256(abi.encode(
         EIP712_DOMAIN_TYPEHASH,
         keccak256("Experty Wisdom Token"),
-        keccak256("1.4.5"),
+        keccak256("1.5.0"),
         chainId,
-        verifyingContract
+        verifyingContract,
+        salt
     ));
 
     function getChainID() private pure returns (uint256) {
