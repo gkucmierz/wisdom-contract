@@ -4,6 +4,9 @@ jobs:
     docker:
       - image: cimg/node:14.15.0
     steps:
+      - npm install
+      - run: npm i
+    steps:
       - checkout
       - run: node run docs
   docs-deploy:
