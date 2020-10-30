@@ -21,17 +21,17 @@ contract ERCTransferFrom is ERC667 {
 
     mapping (address => mapping (address => uint256)) public nonceOf;
 
-    string private TRANSFER_FROM_TYPE = "TransferFrom(address to,uint256 amount,uint256 nonce)";
-    string private TRANSFER_FROM_UNTIL_TYPE =
-        "TransferFromUntil(address to,uint256 amount,uint256 nonce,uint256 untilBlock)";
+    bytes32 private TRANSFER_FROM_TYPEHASH = keccak256("TransferFrom(address to,uint256 amount,uint256 nonce)");
+    bytes32 private TRANSFER_FROM_UNTIL_TYPEHASH = keccak256(
+        "TransferFromUntil(address to,uint256 amount,uint256 nonce,uint256 untilBlock)");
     uint256 private chainId = getChainID();
     address private verifyingContract = address(this);
     string private PREFIX = "\\x19\\x01";
     bytes32 constant salt = 0xeb338c7e2d28aad50a8209fc9f5f2eea691acfccf5e9a04fea0d5b95ba3c4c87;
-    string private EIP712_DOMAIN_TYPE =
-        "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
+    bytes32 private EIP712_DOMAIN_TYPEHASH = keccak256(
+        "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
     bytes32 private DOMAIN_SEPARATOR = keccak256(abi.encode(
-        EIP712_DOMAIN_TYPE,
+        EIP712_DOMAIN_TYPEHASH,
         keccak256("Experty Wisdom Token"),
         keccak256("1.5.0"),
         chainId,
@@ -51,7 +51,7 @@ contract ERCTransferFrom is ERC667 {
         return keccak256(abi.encodePacked(
             PREFIX,
             DOMAIN_SEPARATOR,
-            TRANSFER_FROM_TYPE,
+            TRANSFER_FROM_TYPEHASH,
             _transferFrom.to,
             _transferFrom.amount,
             _transferFrom.nonce
@@ -62,7 +62,7 @@ contract ERCTransferFrom is ERC667 {
         return keccak256(abi.encodePacked(
             PREFIX,
             DOMAIN_SEPARATOR,
-            TRANSFER_FROM_UNTIL_TYPE,
+            TRANSFER_FROM_UNTIL_TYPEHASH,
             _transferFromUntil.to,
             _transferFromUntil.amount,
             _transferFromUntil.nonce,
