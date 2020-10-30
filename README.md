@@ -1,7 +1,11 @@
 
 ## Wisdom Contract
 
-#### setup env
+#### Docs
+
+https://experty.github.io/wisdom-contract/
+
+#### Setup env for batch transfers
 
 ```bash
 npm i
