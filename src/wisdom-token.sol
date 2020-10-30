@@ -141,7 +141,9 @@ contract ERCTransferFrom is ERC667 {
     return success;
   }
 
-  function transferFrom(address _recipient, uint256 _amount, uint256 _nonce, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+  function transferFrom(
+    address _recipient, uint256 _amount, uint256 _nonce,
+    uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
     bytes32 hash = hashTransferFrom(TransferFrom({
       to: _recipient,
       amount: _amount,
@@ -151,7 +153,9 @@ contract ERCTransferFrom is ERC667 {
     return _transfer(from, _recipient, _amount, _nonce);
   }
 
-  function transferFromUntil(address _recipient, uint256 _amount, uint256 _nonce, uint256 _untilBlock, uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
+  function transferFromUntil(
+    address _recipient, uint256 _amount, uint256 _nonce, uint256 _untilBlock,
+    uint8 _v, bytes32 _r, bytes32 _s) public returns (bool) {
     bytes32 hash = hashTransferFromUntil(TransferFromUntil({
       to: _recipient,
       amount: _amount,
