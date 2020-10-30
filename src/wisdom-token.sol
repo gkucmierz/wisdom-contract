@@ -77,19 +77,27 @@ contract ERCTransferFrom is ERC667 {
 
   mapping (address => mapping (address => uint256)) public nonceOf;
 
-  string private constant TRANSFER_FROM_TYPEHASH = "TransferFrom(address to,uint256 amount,uint256 nonce)";
-  string private constant TRANSFER_FROM_UNTIL_TYPEHASH = "TransferFromUntil(address to,uint256 amount,uint256 nonce,uint256 untilBlock)";
-  uint256 private chainId = getChainID();
-  address private verifyingContract = address(this);
-  string private constant EIP712_DOMAIN_TYPEHASH = "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
+  string private TRANSFER_FROM_TYPEHASH;
+  string private TRANSFER_FROM_UNTIL_TYPEHASH;
+  uint256 private chainId;
+  address private verifyingContract;
+  string private EIP712_DOMAIN_TYPEHASH;
+  bytes32 private DOMAIN_SEPARATOR;
 
-  bytes32 private DOMAIN_SEPARATOR = keccak256(abi.encode(
-    EIP712_DOMAIN_TYPEHASH,
-    keccak256("Experty Wisdom Token"),
-    keccak256("1.4"),
-    chainId,
-    verifyingContract
-  ));
+  function initTransferFrom() public {
+    TRANSFER_FROM_TYPEHASH = "TransferFrom(address to,uint256 amount,uint256 nonce)";
+    TRANSFER_FROM_UNTIL_TYPEHASH = "TransferFromUntil(address to,uint256 amount,uint256 nonce,uint256 untilBlock)";
+    chainId = getChainID();
+    verifyingContract = address(this);
+    EIP712_DOMAIN_TYPEHASH = "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
+    DOMAIN_SEPARATOR = keccak256(abi.encode(
+      EIP712_DOMAIN_TYPEHASH,
+      keccak256("Experty Wisdom Token"),
+      keccak256("1.4.3"),
+      chainId,
+      verifyingContract
+    ));
+  }
 
   function getChainID() private pure returns (uint256) {
     uint256 id;
@@ -247,5 +255,6 @@ contract WisdomToken is ERCTransferFrom, Pausable, Issuable {
     lock();
     unpause();
     changeOwner(_newOwner);
+    initTransferFrom();
   }
 }
