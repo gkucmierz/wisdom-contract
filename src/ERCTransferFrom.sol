@@ -2,7 +2,9 @@
 
 pragma solidity ^0.7.2;
 
-contract ERCTransferFrom {
+import "./ERC667.sol";
+
+contract ERCTransferFrom is ERC667 {
 
     struct TransferFrom {
         address to;
