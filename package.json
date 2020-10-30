@@ -5,6 +5,8 @@
   "scripts": {
     "lint": "solhint src/**",
     "docs": "node scripts/generate_docs.js",
+    "build": "poa-solidity-flattener src/WisdomToken.sol",
+    "watch": "nodemon --exec \"npm run build & npm run docs\" -e sol --ignore ./build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "husky": {
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/Experty/wisdom-contract#readme",
   "devDependencies": {
+    "@poanet/solidity-flattener": "^3.0.6",
     "directory-tree": "^2.2.5",
     "dotenv": "^8.2.0",
     "ethereumjs-tx": "^2.1.2",

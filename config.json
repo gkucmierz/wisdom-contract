@@ -1,0 +1,5 @@
+{
+    "_description": "solidity flattener config",
+    "inputFilePath": "./src/ERC667.sol",
+    "outputDir": "./build"
+}
