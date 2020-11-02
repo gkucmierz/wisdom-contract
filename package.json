@@ -1,6 +1,6 @@
 {
   "name": "wisdom-contract",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "Wisdom Token contract and deploy scripts",
   "scripts": {
     "lint": "solhint src/**",
