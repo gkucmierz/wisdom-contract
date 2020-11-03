@@ -9,7 +9,7 @@ contract ERC20 {
     uint256 public totalSupply;
 
     mapping (address => uint256) public balanceOf;
-    mapping (address => mapping (address => uint256)) public allowed;
+    mapping (address => mapping (address => uint256)) private allowed;
 
     function _transfer(address sender, address recipient, uint256 amount) internal virtual returns (bool) {
         require(balanceOf[sender] >= amount);
