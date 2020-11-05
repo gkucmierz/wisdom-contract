@@ -113,7 +113,7 @@ const saveTransactions = transactions => {
   fs.writeFileSync(TRANSACTIONS_FILE, JSON.stringify(transactions, null, '  '));
 };
 
-const pushTransactions = async (finishCb) => {
+const pushTransactions = async (finishCb = _ => _) => {
   const Web3 = require('web3');
   const web3 = new Web3(INFURA_PROVIDER);
   const { transactions, startingNonce } = require(TRANSACTIONS_FILE);
@@ -121,19 +121,21 @@ const pushTransactions = async (finishCb) => {
   console.log(`Pushing ${transactions.length} transactions to network`);
 
   const addrNonce = await web3.eth.getTransactionCount(OWNER_ADDR);
-  let pushed = false;
+  let cnt = 0;
   for (let i = addrNonce - startingNonce; i < transactions.length; ++i) {
     const tx = transactions[i];
     web3.eth.sendSignedTransaction(tx).catch(error => {
       // console.error(error);
     });
-    pushed = true;
+    if (cnt++ > 5) break;
   }
 
-  console.log(`Pushed ${transactions.length} transactions to network!`);
+  // console.log(`Pushed ${transactions.length} transactions to network!`);
 
-  if (!pushed) {
+  if (cnt === 0) {
     finishCb();
+  } else {
+    setTimeout(pushTransactions, 5e3);
   }
 };
 

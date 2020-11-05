@@ -1,7 +1,19 @@
 
 ## Wisdom Contract
 
-#### setup env
+#### Token Address
+
+```0xDecade1c6Bf2cD9fb89aFad73e4a519C867adcF5```
+
+:memo: [Contract](https://etherscan.io/address/0xDecade1c6Bf2cD9fb89aFad73e4a519C867adcF5)
+
+:dollar: [Token Tracker](https://etherscan.io/token/0xDecade1c6Bf2cD9fb89aFad73e4a519C867adcF5)
+
+#### Docs
+
+https://experty.github.io/wisdom-contract/
+
+#### Setup env for batch transfers
 
 ```bash
 npm i
