@@ -1,5 +1,5 @@
 
-## Wisdom Contract
+## Wisdom Token
 
 #### Token Address
 
@@ -11,7 +11,7 @@
 
 #### Docs
 
-https://experty.github.io/wisdom-contract/
+https://gkucmierz.github.io/wisdom-token
 
 #### Setup env for batch transfers
 
