@@ -1,5 +1,5 @@
 {
-  "name": "wisdom-contract",
+  "name": "wisdom-token",
   "version": "2.0.1",
   "description": "Wisdom Token contract and deploy scripts",
   "scripts": {

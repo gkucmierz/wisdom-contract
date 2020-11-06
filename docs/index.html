@@ -182,13 +182,13 @@
             background-size: 75% auto;
         }
     </style>
-    <title>wisdom-contract | soldoc</title>
+    <title>wisdom-token | soldoc</title>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div style="width: 90%; max-width: 1300px; margin: auto;">
-            <a class="navbar-brand" href="#">wisdom-contract</a>
+            <a class="navbar-brand" href="#">wisdom-token</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -216,9 +216,13 @@
 
         <div class="container">
             <div class="README">
-                <h2>Wisdom Contract</h2>
+                <h2>Wisdom Token</h2>
+<h4>Token Address</h4>
+<p><code>0xDecade1c6Bf2cD9fb89aFad73e4a519C867adcF5</code></p>
+<p><i class="twa twa-memo"></i> <a href="https://etherscan.io/address/0xDecade1c6Bf2cD9fb89aFad73e4a519C867adcF5">Contract</a></p>
+<p><i class="twa twa-dollar"></i> <a href="https://etherscan.io/token/0xDecade1c6Bf2cD9fb89aFad73e4a519C867adcF5">Token Tracker</a></p>
 <h4>Docs</h4>
-<p><a href="https://experty.github.io/wisdom-contract/">https://experty.github.io/wisdom-contract/</a></p>
+<p><a href="https://gkucmierz.github.io/wisdom-token">https://gkucmierz.github.io/wisdom-token</a></p>
 <h4>Setup env for batch transfers</h4>
 <pre class="hljs"><code>npm i
 touch .env
@@ -248,7 +252,7 @@ STARTING_NONCE =
             return inputContent.map((content) => content.type === 'directory' ? cDirectory(content) : cFile(content)).join('');
         }
         function loadDirectoryTreeView() {
-            var paths = [{"path":"/Users/gkucmierz/workspace/wisdom-contract/src","name":"src","children":[{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/ERC20.sol","name":"ERC20.sol","size":3230,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/ERC667.sol","name":"ERC667.sol","size":811,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/IERC667Receiver.sol","name":"IERC667Receiver.sol","size":586,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/Issuable.sol","name":"Issuable.sol","size":1221,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/Ownable.sol","name":"Ownable.sol","size":1066,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/Pausable.sol","name":"Pausable.sol","size":1027,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/wisdom-contract/src/WisdomToken.sol","name":"WisdomToken.sol","size":1126,"extension":".sol","type":"file"}],"size":9067,"type":"directory"}];
+            var paths = [{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src","name":"src","children":[{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/ERC20.sol","name":"ERC20.sol","size":3230,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/ERC667.sol","name":"ERC667.sol","size":811,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/IERC667Receiver.sol","name":"IERC667Receiver.sol","size":586,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/Issuable.sol","name":"Issuable.sol","size":1221,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/Ownable.sol","name":"Ownable.sol","size":1066,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/Pausable.sol","name":"Pausable.sol","size":1027,"extension":".sol","type":"file"},{"path":"/Users/gkucmierz/workspace/gkucmierz/wisdom-token/src/WisdomToken.sol","name":"WisdomToken.sol","size":1126,"extension":".sol","type":"file"}],"size":9067,"type":"directory"}];
         document.getElementById("contracts-treeview").innerHTML = renderTreeView(paths);
         }
         loadDirectoryTreeView();
